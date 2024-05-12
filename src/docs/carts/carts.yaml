@@ -1,0 +1,265 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Obtiene todos los Carritos, en caso de que el carrito tenga productos, tambien los llamara
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        "500":
+          description: Error interno del server
+    post:
+      summary: Crea un carrito con información default a partir de informacion en el body
+      tags:
+        - Carts
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createCart'
+      responses:
+        "200":
+          description: Crea un carrito asignado que se asigna automaticamente a un usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/newCart'
+        "500":
+          description: Error interno del server
+  
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene un Carrito mediante el cid
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito, llamado cid, que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El Carrito fue obtenido correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Cart'
+        "400":
+          description: El producto no fue encontrado
+    delete:
+      summary: Borra un Carrito mediante su cid (hace borrado logico)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito, llamado cid, que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El ejemplo muestra el carrito borrado, aunque en response '200' solo dira 'Success carrito borrado', por ser borrado logico
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/deleteCart'
+  
+  /api/carts/{cid}/{pid}:
+    put:
+      summary: Agregamos un producto al array del carrito, incluyendo la cantidad de productos
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito, llamado cid, que desea solicitar
+          schema:
+            type: string
+          example: 66315920708726d130ad62ba
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto, llamado pid, que desea solicitar
+          schema:
+            type: string
+          example: 66316c92e048ba9a2f6ae437
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/quantity'
+      responses:
+        "200":
+          description: El producto fue agregado al carrito exitosamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/putProductToCart'
+        "404":
+          description: El carrito no fue encontrado
+    delete:
+      summary: Quitamos un producto al array del carrito, incluyendo la cantidad de productos
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: El id del carrito, llamado cid, que desea solicitar
+          schema:
+            type: string
+          example: 66315920708726d130ad62ba
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto, llamado pid, que desea solicitar
+          schema:
+            type: string
+          example: 66316c92e048ba9a2f6ae437
+      responses:
+        "200":
+          description: El producto fue eliminado al carrito exitosamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/newCart'
+        "404":
+          description: El carrito no fue encontrado
+        
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del usuario al que pertenece el carrito
+        emailUser: 
+          type: string
+          description: Email del usuario al que pertenece el carrito
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a fals
+        products:
+          type: array
+          description: Array que tiene los productos a introducir
+      example:
+        _id: ObjectId('66315920708726d130ad62ba')
+        title: Baruch Cart,
+        emailUser: Baruch@aaaaaa.com,
+        products: [{product1: aaaaaaaaaa, quantity: 1, _id: asdlaskdlka},{product2: bbbbbbbbbb, quantity: 4,_id: babsbdjaq}]
+        isActive: true
+    newCart:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del usuario al que pertenece el carrito
+        emailUser: 
+          type: string
+          description: Email del usuario al que pertenece el carrito
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a fals
+        products:
+          type: array
+          description: Array que tiene los productos a introducir
+      example:
+        _id: ObjectId('66315920708726d130ad62ba')
+        title: Baruch Cart,
+        emailUser: Baruch@aaaaaa.com,
+        products: []
+        isActive: true
+    putProductToCart:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del usuario al que pertenece el carrito
+        emailUser: 
+          type: string
+          description: Email del usuario al que pertenece el carrito
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a fals
+        products:
+          type: array
+          description: Array que tiene los productos a introducir
+      example:
+        _id: ObjectId('66315920708726d130ad62ba')
+        title: Baruch Cart,
+        emailUser: Baruch@aaaaaa.com,
+        products: [{product1: aaaaaaaaaa, quantity: 1, _id: asdlaskdlka}]
+        isActive: true
+    deleteCart:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del usuario al que pertenece el carrito
+        emailUser: 
+          type: string
+          description: Email del usuario al que pertenece el carrito
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a fals
+        products:
+          type: array
+          description: Array que tiene los productos a introducir
+      example:
+        _id: ObjectId('66315920708726d130ad62ba')
+        title: Baruch Cart,
+        emailUser: Baruch@aaaaaa.com,
+        products: []
+        isActive: false    
+  
+  requestBodies:
+    createCart:
+      type: object
+      properties: 
+        title:
+          type: string
+          description: Nombre del usuario al que pertenece el carrito
+        emailUser: 
+          type: string
+          description: Email del usuario al que pertenece el carrito
+      example:
+        title: Baruch Cart,
+        emailUser: baruch@gmm.com
+    quantity:
+      type: object
+      properties: 
+        quantity:
+          type: number
+          description: Cantidad de productos a agregar al carrito
+      example:
+        quantity: 1

@@ -1,0 +1,267 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los Productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Obtiene todos los Productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "500":
+          description: Error interno del server
+    post:
+      summary: Este endpoint crea un producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: El producto fue creado correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: El producto no se pudo crear
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un Producto mediante el pid
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto, llamado pid, que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El producto fue obtenido correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Product'
+        "400":
+          description: El producto no fue encontrado
+     
+    delete:
+      summary: Borra un Producto mediante su pid (hace borrado logico)
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto, llamado pid, que desea solicitar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: El ejemplo muestra el producto borrado, aunque en response '200' solo dira 'Success producto borrado', por ser borrado logico
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/deleteProduct'
+  
+  /api/products/{pid}/{desc}:
+    put:
+      summary: Modificamos el precio de un Producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto, llamado pid, que desea solicitar
+          schema:
+            type: string
+          example: 66316c92e048ba9a2f6ae437
+        - name: desc
+          in: path
+          required: true
+          description: La cantidad del descuento a realizar
+          schema:
+            type: number
+          example: 10, no debe pasar de 50
+      responses:
+        "200":
+          description: El producto fue obtenido correctamente
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/putProduct'
+              examples:
+                first:
+                  value:
+                    _id: ObjectId(66316c92e048ba9a2f6ae437)
+                    title: "Manzana"
+                    category: "Abarrotes"
+                    stock: 10
+                    price: 80
+                    description: "Manzana"
+                    isActive: true
+                  description: Este es el producto encontrado antes de modificar su precio mediante el parametro desc
+                then:
+                  value:
+                    _id: ObjectId(66316c92e048ba9a2f6ae437)
+                    title: "Manzana"
+                    category: "Abarrotes"
+                    stock: 10
+                    price: 72
+                    description: "Manzana"
+                    isActive: true 
+                  description: Producto al que se le modifico el precio
+      # responses:
+      #   "200":
+      #     description: El producto fue modificado correctamente
+      #     content: 
+      #       application/json:
+      #         schema: 
+      #           $ref: '#/components/schemas/putProduct'
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del producto
+        category: 
+          type: string
+          description: A que categoria pertenece el producto
+        stock: 
+          type: number
+          description: Cuanto producto tenemos en existencia
+        price: 
+          type: number
+          description: Precio del producto
+        description: 
+          type: string
+          description: Descripción del producto
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a false
+      example:
+        _id: ObjectId(65f6131e65bd4d01399d9545)
+        title: Manzana,
+        category: Abarrotes,
+        stock: 10,
+        price: 200,
+        description: Rica manzana verde
+        isActive: true
+
+    deleteProduct:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del producto
+        category: 
+          type: string
+          description: A que categoria pertenece el producto
+        stock: 
+          type: number
+          description: Cuanto producto tenemos en existencia
+        price: 
+          type: number
+          description: Precio del producto
+        description: 
+          type: string
+          description: Descripción del producto
+        isActive:
+          type: boolean
+          description: Pasa a ser false
+      example:
+        _id: ObjectId(65f6131e65bd4d01399d9545)
+        title: Manzana,
+        category: Abarrotes,
+        stock: 10,
+        price: 200,
+        description: Rica manzana verde
+        isActive: false
+
+    putProduct:
+      type: object
+      properties:
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del producto
+        category: 
+          type: string
+          description: A que categoria pertenece el producto
+        stock: 
+          type: number
+          description: Cuanto producto tenemos en existencia
+        price: 
+          type: number
+          description: Precio del producto a descontar
+        description: 
+          type: string
+          description: Descripción del producto
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a false
+      # example:
+      #   _id: ObjectId(65f6131e65bd4d01399d9545)
+      #   title: "Mango"
+      #   description: "Mango amarillo"
+      #   price: 80
+      #   stock: 10
+      #   quantity: 15
+      #   isActive: false
+     
+
+  requestBodies:
+    createProduct:
+      type: object
+      properties: 
+        _id:
+          type: objectId
+          description: Id autogenerado
+        title:
+          type: string
+          description: Nombre del producto
+        category: 
+          type: string
+          description: A que categoria pertenece el producto
+        stock: 
+          type: number
+          description: Cuanto producto tenemos en existencia
+        price: 
+          type: number
+          description: Precio del producto
+        description: 
+          type: string
+          description: Descripción del producto
+        isActive:
+          type: boolean
+          description: Esta por default en true, para poder hacer un borrado logico lo pasamos a false
+      example:
+        title: Manzana,
+        category: Abarrotes,
+        stock: 10,
+        price: 200,
+        description: Rica manzana verde

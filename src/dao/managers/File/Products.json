@@ -1,0 +1,18 @@
+
+[
+    {
+    "id": 1,
+    "title": "MANZANA",
+    "price": 200
+  },
+  {
+    "id": 2,
+    "title": "PERA",
+    "price": 200
+  },
+  {
+    "id": 3,
+    "title": "UVA",
+    "price": 200
+  }
+]
