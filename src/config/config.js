@@ -17,9 +17,6 @@ export const configObject = {
     persistence:    process.env.PERSISTENCE,
     gmail_user:     process.env.GMAIL_USER_APP,
     gmail_pass:     process.env.GMAIL_PASS_APP,
-    twilio_sid:     process.env.TWILIO_ACCOUNT_SID,
-    twilio_token:   process.env.TWILIO_AUTH_TOKEN,
-    twilio_phone:   process.env.TWILIO_NUMBER
 }
 
 

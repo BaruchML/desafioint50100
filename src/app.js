@@ -58,7 +58,6 @@ const swaggerOptions = {
     },
     apis: [`src/docs/**/*.yaml`]
 }
-//dirname me trae hasta src 
 
 const specs = swaggerJsDocs(swaggerOptions);
 
