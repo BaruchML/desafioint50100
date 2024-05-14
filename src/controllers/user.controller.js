@@ -135,7 +135,7 @@ export class UserController {
                 payload: result
             })
         } catch (error) {
-            console.log(error)
+            loggerWinston.error(error)
             
         }
     }

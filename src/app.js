@@ -42,7 +42,7 @@ app.use(passport.initialize())
 app.use(addLogger)
 
 app.use(express.static(__dirname+'/public'))
-console.log(__dirname);
+
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");

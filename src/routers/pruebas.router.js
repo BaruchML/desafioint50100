@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { fork } from "child_process"
 import {sendMail} from "../utils/sendEmail.js";
-import { sendSms } from "../utils/sendSms.js";
 import {faker} from "@faker-js/faker"
 import compression from "express-compression";
 
